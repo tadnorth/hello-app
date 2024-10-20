@@ -1,4 +1,5 @@
 # remember to streamlit run .\test1.py using a terminal
+# ref this page for the basics: https://docs.streamlit.io/get-started/fundamentals/main-concepts
 
 import streamlit as st
 
