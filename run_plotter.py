@@ -3,22 +3,21 @@ import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
 
-# Google Sheets Configuration
-SHEET_URL = "https://docs.google.com/spreadsheets/d/1-ArplpDGmj7NDo8WanNy5Py76uijZfnMeQhZx0axiqA/edit?gid=129851035#gid=129851035"
-SERVICE_ACCOUNT_FILE = "tads-tooling-b9e7328a381e.json"
+# Load credentials from Streamlit secrets
+creds_dict = st.secrets["gcp_service_account"]
+creds = Credentials.from_service_account_info(dict(creds_dict))
 
-# Authenticate with Google Sheets
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=scope)
+# Authorize with Google Sheets
 client = gspread.authorize(creds)
 
-# Load Data from Google Sheets
+# Google Sheet URL
+SHEET_URL = "https://docs.google.com/spreadsheets/d/1-ArplpDGmj7NDo8WanNy5Py76uijZfnMeQhZx0axiqA/edit?gid=129851035#gid=129851035"
+
 def load_data(sheet_url):
     sheet = client.open_by_url(sheet_url).sheet1
     data = sheet.get_all_records()
     return pd.DataFrame(data)
 
-# Streamlit UI
 st.title("Google Sheets Data Graphing")
 
 try:
