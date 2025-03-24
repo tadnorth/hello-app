@@ -5,7 +5,8 @@ from google.oauth2.service_account import Credentials
 
 # Load credentials from Streamlit secrets
 creds_dict = st.secrets["gcp_service_account"]
-creds = Credentials.from_service_account_info(dict(creds_dict))
+scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+creds = Credentials.from_service_account_info(dict(creds_dict), scopes=scope)
 
 # Authorize with Google Sheets
 client = gspread.authorize(creds)
