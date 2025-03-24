@@ -18,6 +18,11 @@ def load_data(sheet_url):
     data = sheet.get_all_records()
     return pd.DataFrame(data)
 
+# numericize the date
+def numericize_date(date_col):
+    df["Number Date"] = pd.to_datetime(df[date_col], format="%d/%m/%Y %H:%M:%S", errors="coerce")
+    return "Number Date"
+
 # Streamlit UI
 st.title("Google Sheets Data Graphing")
 
@@ -25,12 +30,15 @@ try:
     df = load_data(SHEET_URL)
 
     if not df.empty:
-        st.write("### Data Preview:")
-        st.dataframe(df)
+        # st.write("### Data Preview:")
+        # st.dataframe(df)
 
         # Select Columns
-        x_col = st.selectbox("Select X-Axis Column:", df.columns)
-        y_col = st.selectbox("Select Y-Axis Column:", df.columns)
+
+        x_col = numericize_date("Timestamp")
+        y_col = "Distance (km)"
+        # x_col = st.selectbox("Select X-Axis Column:", df.columns)
+        # y_col = st.selectbox("Select Y-Axis Column:", df.columns)
 
         # Plot Graph
         if x_col and y_col:
