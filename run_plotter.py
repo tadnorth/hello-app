@@ -25,6 +25,9 @@ try:
     df = load_data(SHEET_URL)
 
     if not df.empty:
+        # Create new column with weight based on actvity type
+        df["Weight"] = df["Run or Cycle?"].apply(lambda x: 0.33333 if x == "Cycle" else 1)
+        
         st.write("### Data Preview:")
         st.dataframe(df)
 
