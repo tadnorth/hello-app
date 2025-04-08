@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
+from datetime import datetime
+import pytz
 
 # Google Sheets Configuration
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1-ArplpDGmj7NDo8WanNy5Py76uijZfnMeQhZx0axiqA/edit?gid=129851035#gid=129851035"
@@ -30,7 +32,19 @@ try:
     df = load_data(SHEET_URL)
 
     if not df.empty:
+        # Add an entry to the dataframe with the timestamp for today, to be used for graphing the target up to today
+        pacific_tz = pytz.timezone("US/Pacific")
+        today = datetime.now(pacific_tz)
+        new_entry = {
+            "Timestamp": today.strftime("%d/%m/%Y %H:%M:%S"),
+            "Run or Cycle?": "RUN",  # Default activity type
+            "Distance (km)": 0,  # Default distance
+        }
+        df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
+        
+        # create a new column with the date in a numeric format
         numericize_date("Timestamp")
+        
         # Create new column with weight based on actvity type
         df["Weight"] = df["Run or Cycle?"].apply(lambda x: 0.33333 if x == "CYCLE" else 1)
         
@@ -41,12 +55,24 @@ try:
         # Create a new column showing the fraction of the way through the year times the 1000km goal
         df["Target (km)"] = (df["Number Date"].dt.dayofyear / 365) * 1000
 
+        # calculate how much actual exceeds or lags behind the target today
+        df["Diff (km)"] = df["Actual (km)"] - df["Target (km)"]
+
+        # show what the value Diff is today
+        today_diff = df.iloc[-1]["Diff (km)"]
+        # today_diff = -today_diff
+        if today_diff < 0:
+            st.markdown(f"### Today you are <span style='color:red'>{-today_diff:.2f} km</span> below target", unsafe_allow_html=True)
+        else:
+            st.markdown(f"### Today you are <span style='color:green'>{today_diff:.2f} km</span> above target", unsafe_allow_html=True)
+
         # st.write("### Data Preview:")
         # st.dataframe(df)
 
         # Select Columns
 
-        x_col = numericize_date("Timestamp")
+        x_col = "Number Date"
+        # numericize_date("Timestamp")
         y_col = "Actual (km)"
         target_col = "Target (km)"
         # x_col = st.selectbox("Select X-Axis Column:", df.columns)
@@ -59,24 +85,6 @@ try:
             # graph the target distance and the accumulated weighted distance both against the date
             st.line_chart(df.set_index(x_col)[[target_col, y_col]])
             #st.line_chart(df.set_index(x_col)[y_col])
-
-            # Use Altair for more customization!!! EXPERIMENTAL
-            import altair as alt
-
-            # Melt the DataFrame if you have multiple Y-series (not needed if just one column)
-            chart_df = df[[x_col, y_col]].copy()
-
-            # Create Altair chart
-            chart = alt.Chart(chart_df).mark_line().encode(
-                x=alt.X(x_col, title="Date"),
-                y=alt.Y(y_col, title=y_col),
-                color=alt.value("#1f77b4")  # Set your desired hex color here
-            ).properties(
-                width=700,
-                height=400
-            )
-
-            st.altair_chart(chart, use_container_width=True)
 
     else:
         st.error("No data found in the Google Sheet.")
