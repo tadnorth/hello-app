@@ -119,6 +119,11 @@ try:
         )
 
         st.altair_chart(chart, use_container_width=True)
+        st.write("Columns in DataFrame:", df.columns.tolist())
+
+        # Convert the distance columns to numeric, forcing errors to NaN
+        df["Actual (km)"] = pd.to_numeric(df["Actual (km)"], errors="coerce")
+        df["Target (km)"] = pd.to_numeric(df["Target (km)"], errors="coerce")
 
 
 
