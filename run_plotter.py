@@ -93,22 +93,22 @@ try:
         # Clean up and validate columns
         df.columns = df.columns.str.strip()
 
-        # Convert to datetime and sort
-        df["Date"] = pd.to_datetime(df["Number Date"], errors="coerce")
-        df = df.sort_values("Date")
+        # # Convert to datetime and sort
+        # df["Date"] = pd.to_datetime(df["Number Date"], errors="coerce")
+        # df = df.sort_values("Date")
 
-        # Convert Y-axis columns to numeric
-        df["Actual (km)"] = pd.to_numeric(df["Actual (km)"], errors="coerce")
-        df["Target (km)"] = pd.to_numeric(df["Target (km)"], errors="coerce")
+        # # Convert Y-axis columns to numeric
+        # df["Actual (km)"] = pd.to_numeric(df["Actual (km)"], errors="coerce")
+        # df["Target (km)"] = pd.to_numeric(df["Target (km)"], errors="coerce")
 
-        # Drop rows with missing values in any critical column
-        df = df.dropna(subset=["Date", "Actual (km)", "Target (km)"])
+        # # Drop rows with missing values in any critical column
+        # df = df.dropna(subset=["Date", "Actual (km)", "Target (km)"])
         
-        # add a column to check if "Date" and "Number Date" are exactly the same
-        df["Date Check"] = df["Date"].dt.strftime("%d/%m/%Y %H:%M:%S") == df["Number Date"].dt.strftime("%d/%m/%Y %H:%M:%S")
+        # # add a column to check if "Date" and "Number Date" are exactly the same
+        # df["Date Check"] = df["Date"].dt.strftime("%d/%m/%Y %H:%M:%S") == df["Number Date"].dt.strftime("%d/%m/%Y %H:%M:%S")
 
-        # preview dataframe
-        st.dataframe(df)
+        # # preview dataframe
+        # st.dataframe(df)
 
         # Melt to long format
         melted_df = df.melt(
