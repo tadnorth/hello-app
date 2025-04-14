@@ -87,11 +87,11 @@ try:
             st.line_chart(df.set_index(x_col)[[target_col, y_col]])
             #st.line_chart(df.set_index(x_col)[y_col])
 
-        # attempt with altair
-        import altair as alt
+        # # attempt with altair
+        # import altair as alt
 
-        # Clean up and validate columns
-        df.columns = df.columns.str.strip()
+        # # Clean up and validate columns
+        # df.columns = df.columns.str.strip()
 
         # # Convert to datetime and sort
         # df["Date"] = pd.to_datetime(df["Number Date"], errors="coerce")
@@ -110,32 +110,32 @@ try:
         # # preview dataframe
         # st.dataframe(df)
 
-        # Melt to long format
-        melted_df = df.melt(
-            id_vars=["Number Date"],
-            value_vars=["Actual (km)", "Target (km)"],
-            var_name="Series",
-            value_name="Distance"
-        )
+        # # Melt to long format
+        # melted_df = df.melt(
+        #     id_vars=["Number Date"],
+        #     value_vars=["Actual (km)", "Target (km)"],
+        #     var_name="Series",
+        #     value_name="Distance"
+        # )
 
-        # Set custom color scale
-        color_scale = alt.Scale(
-            domain=["Actual (km)", "Target (km)"],
-            range=["#1f77b4", "#d62728"]
-        )
+        # # Set custom color scale
+        # color_scale = alt.Scale(
+        #     domain=["Actual (km)", "Target (km)"],
+        #     range=["#1f77b4", "#d62728"]
+        # )
 
-        # Build Altair chart
-        chart = alt.Chart(melted_df).mark_line().encode(
-            x=alt.X("Number Date:T", title="Number Date"),
-            y=alt.Y("Distance:Q", title="Distance (km)"),
-            color=alt.Color("Series:N", scale=color_scale, title="Legend")
-        ).properties(
-            width=700,
-            height=400,
-            title="Actual vs Target Distance Over Time"
-        )
+        # # Build Altair chart
+        # chart = alt.Chart(melted_df).mark_line().encode(
+        #     x=alt.X("Number Date:T", title="Number Date"),
+        #     y=alt.Y("Distance:Q", title="Distance (km)"),
+        #     color=alt.Color("Series:N", scale=color_scale, title="Legend")
+        # ).properties(
+        #     width=700,
+        #     height=400,
+        #     title="Actual vs Target Distance Over Time"
+        # )
 
-        st.altair_chart(chart, use_container_width=True)
+        # st.altair_chart(chart, use_container_width=True)
 
 
 
