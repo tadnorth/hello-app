@@ -68,7 +68,7 @@ try:
             st.markdown(f"### Today you are <span style='color:green'>{today_diff:.2f} km</span> above target", unsafe_allow_html=True)
 
         # st.write("### Data Preview:")
-        # st.dataframe(df)
+        st.dataframe(df)
 
         # Select Columns
 
@@ -90,28 +90,35 @@ try:
         # attempt with altair
         import altair as alt
 
-        # Convert the distance columns to numeric, forcing errors to NaN
+        # Clean up and validate columns
+        df.columns = df.columns.str.strip()
+
+        # Convert to datetime and sort
+        df["Date"] = pd.to_datetime(df["Number Date"], errors="coerce")
+        df = df.sort_values("Date")
+
+        # Convert Y-axis columns to numeric
         df["Actual (km)"] = pd.to_numeric(df["Actual (km)"], errors="coerce")
         df["Target (km)"] = pd.to_numeric(df["Target (km)"], errors="coerce")
 
-        # Ensure datetime column is parsed and sorted
-        df = df.sort_values("Number Date")
+        # Drop rows with missing values in any critical column
+        df = df.dropna(subset=["Date", "Actual (km)", "Target (km)"])
 
-        # Melt the DataFrame to long format for Altair
+        # Melt to long format
         melted_df = df.melt(
-            id_vars=["Number Date"],
+            id_vars=["Date"],
             value_vars=["Actual (km)", "Target (km)"],
             var_name="Series",
             value_name="Distance"
         )
 
-        # Define custom color mapping
+        # Set custom color scale
         color_scale = alt.Scale(
             domain=["Actual (km)", "Target (km)"],
-            range=["#1f77b4", "#d62728"]  # blue and red
+            range=["#1f77b4", "#d62728"]
         )
 
-        # Build the Altair chart
+        # Build Altair chart
         chart = alt.Chart(melted_df).mark_line().encode(
             x=alt.X("Date:T", title="Date"),
             y=alt.Y("Distance:Q", title="Distance (km)"),
