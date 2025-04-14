@@ -126,7 +126,7 @@ try:
 
         # Build Altair chart
         chart = alt.Chart(melted_df).mark_line().encode(
-            x=alt.X("Date:T", title="Date"),
+            x=alt.X("Number Date:T", title="Number Date"),
             y=alt.Y("Distance:Q", title="Distance (km)"),
             color=alt.Color("Series:N", scale=color_scale, title="Legend")
         ).properties(
