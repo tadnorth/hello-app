@@ -90,6 +90,10 @@ try:
         # attempt with altair
         import altair as alt
 
+        # Convert the distance columns to numeric, forcing errors to NaN
+        df["Actual (km)"] = pd.to_numeric(df["Actual (km)"], errors="coerce")
+        df["Target (km)"] = pd.to_numeric(df["Target (km)"], errors="coerce")
+
         # Ensure datetime column is parsed and sorted
         df = df.sort_values("Number Date")
 
@@ -119,11 +123,6 @@ try:
         )
 
         st.altair_chart(chart, use_container_width=True)
-        st.write("Columns in DataFrame:", df.columns.tolist())
-
-        # Convert the distance columns to numeric, forcing errors to NaN
-        df["Actual (km)"] = pd.to_numeric(df["Actual (km)"], errors="coerce")
-        df["Target (km)"] = pd.to_numeric(df["Target (km)"], errors="coerce")
 
 
 
