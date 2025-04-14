@@ -7,7 +7,10 @@ import pytz
 
 # Google Sheets Configuration
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1-ArplpDGmj7NDo8WanNy5Py76uijZfnMeQhZx0axiqA/edit?gid=129851035#gid=129851035"
-SERVICE_ACCOUNT_FILE = "tads-tooling-b9e7328a381e.json"
+
+# service account depends on local PC
+# SERVICE_ACCOUNT_FILE = "tads-tooling-b9e7328a381e.json" # tbox
+SERVICE_ACCOUNT_FILE = "tads-tooling-7880293dcd19.json" # t-laptop
 
 # Authenticate with Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]

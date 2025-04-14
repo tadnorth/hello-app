@@ -68,7 +68,7 @@ try:
             st.markdown(f"### Today you are <span style='color:green'>{today_diff:.2f} km</span> above target", unsafe_allow_html=True)
 
         # st.write("### Data Preview:")
-        st.dataframe(df)
+        # st.dataframe(df)
 
         # Select Columns
 
