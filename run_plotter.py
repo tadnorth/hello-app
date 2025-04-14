@@ -103,7 +103,10 @@ try:
 
         # Drop rows with missing values in any critical column
         df = df.dropna(subset=["Date", "Actual (km)", "Target (km)"])
-
+        
+        # preview dataframe
+        st.dataframe(df)
+        
         # Melt to long format
         melted_df = df.melt(
             id_vars=["Date"],
