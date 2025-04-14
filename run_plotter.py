@@ -112,7 +112,7 @@ try:
 
         # Melt to long format
         melted_df = df.melt(
-            id_vars=["Date"],
+            id_vars=["Number Date"],
             value_vars=["Actual (km)", "Target (km)"],
             var_name="Series",
             value_name="Distance"
