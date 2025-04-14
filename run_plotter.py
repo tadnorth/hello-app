@@ -87,6 +87,41 @@ try:
             st.line_chart(df.set_index(x_col)[[target_col, y_col]])
             #st.line_chart(df.set_index(x_col)[y_col])
 
+        # attempt with altair
+        import altair as alt
+
+        # Ensure datetime column is parsed and sorted
+        df = df.sort_values("Number Date")
+
+        # Melt the DataFrame to long format for Altair
+        melted_df = df.melt(
+            id_vars=["Number Date"],
+            value_vars=["Actual (km)", "Target (km)"],
+            var_name="Series",
+            value_name="Distance"
+        )
+
+        # Define custom color mapping
+        color_scale = alt.Scale(
+            domain=["Actual (km)", "Target (km)"],
+            range=["#1f77b4", "#d62728"]  # blue and red
+        )
+
+        # Build the Altair chart
+        chart = alt.Chart(melted_df).mark_line().encode(
+            x=alt.X("Date:T", title="Date"),
+            y=alt.Y("Distance:Q", title="Distance (km)"),
+            color=alt.Color("Series:N", scale=color_scale, title="Legend")
+        ).properties(
+            width=700,
+            height=400,
+            title="Actual vs Target Distance Over Time"
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
+
+
     else:
         st.error("No data found in the Google Sheet.")
 except Exception as e:
