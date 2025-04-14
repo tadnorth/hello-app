@@ -104,9 +104,12 @@ try:
         # Drop rows with missing values in any critical column
         df = df.dropna(subset=["Date", "Actual (km)", "Target (km)"])
         
+        # add a column to check if "Date" and "Number Date" are exactly the same
+        df["Date Check"] = df["Date"].dt.strftime("%d/%m/%Y %H:%M:%S") == df["Number Date"].dt.strftime("%d/%m/%Y %H:%M:%S")
+
         # preview dataframe
         st.dataframe(df)
-        
+
         # Melt to long format
         melted_df = df.melt(
             id_vars=["Date"],
